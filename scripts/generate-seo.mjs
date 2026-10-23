@@ -9,20 +9,31 @@ try {
 const vercelEnv = process.env.VERCEL_ENV; // 'production', 'preview', 'development' or undefined
 const isProduction = vercelEnv === 'production';
 
-const required = [
-  'VITE_SITE_URL',
-  'VITE_OWNER_NAME',
-  'VITE_CONTACT_EMAIL',
-  'VITE_GOVERNING_CITY',
-  'VITE_GOVERNING_STATE',
-];
+// Safe fallbacks for deployment platforms (like Vercel) where env vars may not yet be added in project settings
+const defaults = {
+  VITE_OWNER_NAME: 'CampusPlus',
+  VITE_CONTACT_EMAIL: 'contact@campusplus.in',
+  VITE_GOVERNING_CITY: 'New Delhi',
+  VITE_GOVERNING_STATE: 'Delhi',
+};
 
-if (isProduction) {
-  const missing = required.filter((name) => !process.env[name]);
-  if (missing.length > 0) {
-    console.error(`Missing required environment variables: ${missing.join(', ')}`);
-    process.exit(1);
+for (const [key, fallback] of Object.entries(defaults)) {
+  if (!process.env[key]) {
+    process.env[key] = fallback;
+    console.warn(`[INFO] ${key} not set in environment. Using default: ${fallback}`);
   }
+}
+
+// Auto-detect production URL from Vercel system variables if VITE_SITE_URL was not set
+if (!process.env.VITE_SITE_URL) {
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    process.env.VITE_SITE_URL = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  } else if (process.env.VERCEL_URL) {
+    process.env.VITE_SITE_URL = `https://${process.env.VERCEL_URL}`;
+  } else {
+    process.env.VITE_SITE_URL = isProduction ? 'https://campusplus.vercel.app' : 'http://localhost:5173';
+  }
+  console.warn(`[INFO] VITE_SITE_URL not set. Using: ${process.env.VITE_SITE_URL}`);
 }
 
 const rawSite = process.env.VITE_SITE_URL || 'http://localhost:5173';
@@ -36,8 +47,7 @@ try {
 }
 
 if (isProduction && !siteUrl.startsWith('https://')) {
-  console.error('VITE_SITE_URL must start with https:// in production.');
-  process.exit(1);
+  siteUrl = siteUrl.replace(/^http:/, 'https:');
 }
 
 const blockAll = vercelEnv === 'preview';
