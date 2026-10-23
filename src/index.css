@@ -1,0 +1,78 @@
+@import "tailwindcss";
+@import "@fontsource/ibm-plex-sans/latin-400.css";
+@import "@fontsource/ibm-plex-sans/latin-500.css";
+@import "@fontsource/ibm-plex-sans/latin-600.css";
+@import "@fontsource/ibm-plex-sans/latin-ext-400.css";
+@import "@fontsource/ibm-plex-sans/latin-ext-600.css";
+
+@theme {
+  --color-canvas: #F7F8FA;
+  --color-surface: #FFFFFF;
+  --color-ink: #111827;
+  --color-muted: #4B5563;
+  --color-line: #D1D5DB;
+
+  --color-brand: #0F766E;
+  --color-brand-hover: #115E59;
+  --color-brand-soft: #E6F4F1;
+
+  --color-warn-bg: #FEF3C7;
+  --color-warn-ink: #92400E;
+  --color-danger-bg: #FEE2E2;
+  --color-danger-ink: #B91C1C;
+  --color-success-bg: #DCFCE7;
+  --color-success-ink: #166534;
+
+  --radius-control: 6px;
+  --radius-card: 8px;
+  --radius-badge: 4px;
+
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -9999px;
+  left: 16px;
+  background-color: #0F766E;
+  color: #FFFFFF;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  z-index: 100;
+  text-decoration: none;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 16px;
+  outline: 2px solid #0F766E;
+  outline-offset: 2px;
+}
+
+*:focus-visible {
+  outline: 2px solid #0F766E;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  button, a, input, select, textarea {
+    transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out;
+  }
+}
